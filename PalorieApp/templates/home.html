@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+{% if user.is_authenticated %}
+  <form action ="{% url 'logout' %}" method="post">
+    {% csrf_token %}
+  <button type="submit">Log Out</button>
+  <p>Welcome back, {{ user.first_name }} {{user.last_name}}! (Logged in as {{user.username}} at userid: {{user.user_id}})</p>
+  <p>You are {{user.age}} years old, {{user.height_ft}}'{{user.height_in}}", and {{user.weight}} lbs</p>
+  
+{% else %}
+  <p>You are not logged in</p>
+  <a href="{% url 'login' %}">Log In</a>
+  <a href="{% url 'signup' %}">Sign Up</a>
+{% endif %}
+{% endblock %}
