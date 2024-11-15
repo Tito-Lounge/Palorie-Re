@@ -1,2 +1,2 @@
 # Palorie:Re
- Palorie redone to reduce excess code.
+A project by Eric Santos, Jared Ho, Thien Bryan Nguyen and Derrick Chan.

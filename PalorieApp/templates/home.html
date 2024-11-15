@@ -6,10 +6,22 @@
 {% if user.is_authenticated %}
   <form action ="{% url 'logout' %}" method="post">
     {% csrf_token %}
-  <button type="submit">Log Out</button>
+    <button type="submit">Log Out</button>
+  </form>
   <p>Welcome back, {{ user.first_name }} {{user.last_name}}! (Logged in as {{user.username}} at userid: {{user.user_id}})</p>
   <p>You are {{user.age}} years old, {{user.height_ft}}'{{user.height_in}}", and {{user.weight}} lbs</p>
-  
+  <form method="post" action="{% url 'home' %}" class="input-form">
+    {% csrf_token %}
+    <label for="input">Describe what you ate and we'll take it from here:</label>
+    <input type="text" id="input" name="input" placeholder="For example: 'Today I ate chicken, beans & rice'" required>
+    <button type="submit" class="submit-btn">Calculate</button>
+  </form>
+  <p>Or alternatively, upload an image to process the type of food:</p>
+  <form action="/upload/" method="post" enctype="multipart/form-data">
+    <input type="file" name="file" accept="image/*">
+    <button type="submit">Upload</button>
+  </form>
+
 {% else %}
   <p>You are not logged in</p>
   <a href="{% url 'login' %}">Log In</a>
