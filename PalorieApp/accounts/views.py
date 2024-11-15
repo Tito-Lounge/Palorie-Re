@@ -7,16 +7,13 @@ from django.template import loader
 
 from django.contrib.auth import logout
 from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 
-# For image uploads
-from django.conf import settings
-from django.core.files.storage import default_storage 
-from django.core.files.base import ContentFile
-from mimetypes import guess_extension, guess_type
-
 from .forms import CustomUserCreationForm
-import os, datetime, json
+from .models import JSONEntry
+from django.conf import settings
+import os
 
 # Form for User Creation
 class SignUpView(CreateView):
@@ -30,6 +27,8 @@ def custom_logout_view(request):
     return redirect('')
 
 # Method for taking text input and generating an entry
+
+# Method for taking image input and generating an entry
 @csrf_exempt
 def upload_image(request):
     if request.method == 'POST' and request.FILES.get('file'):
@@ -44,12 +43,26 @@ def upload_image(request):
             for chunk in image_file.chunks():
                 destination.write(chunk)
         
-        # Process the image and return it to an entry:
-        return HttpResponse("Image uploaded successfully!")
-    return HttpResponse("Failed to upload image.")
+        # Process the image and output a JSON string
+        json_data = ''
+        
+        # Save the JSON entry associated with the user
+        entry = save_json_entry(request.user, json_data)
+        return HttpResponse("Image uploaded and processed successfully!")
+        
+    return HttpResponse("Failed to upload and process image.")
 
-# Method for taking image input and generating an entry
+# Methods for saving and listing JSON entries
+def save_json_entry(user, json_data):
+    entry = JSONEntry.objects.create(user=user,json_data=json_data)
+    return entry
 
-# Method for taking entry, assigning it to a user and storing it in a list
-
+@login_required
+def user_json_entries(request):
+    user = request.user
+    entries = user.json_entries.all()
+    return render(request, 'user_entries.html', {
+        'entries': entries,
+        'user' : request.user,
+        })
 # Method for parsing and displaying an entry list for a user

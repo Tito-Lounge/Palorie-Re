@@ -25,4 +25,5 @@ urlpatterns = [
     path("accounts/", include("accounts.urls")),
     path("accounts/", include("django.contrib.auth.urls")),
     path('upload/', views.upload_image, name='upload_image'),
+    path('my-entries/', views.user_json_entries, name='user_json_entries')
 ]

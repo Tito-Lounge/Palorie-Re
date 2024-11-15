@@ -1,7 +1,9 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.contrib.auth import get_user_model
+from django.conf import settings
 import uuid
+
 
 class CustomUser(AbstractUser):
     user_id = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
@@ -17,7 +19,9 @@ class CustomUser(AbstractUser):
     def __str__(self):
         return self.username
 
-class UploadedImage(models.Model):
-    image = models.ImageField(upload_to='uploads/')
-    uploaded_at = models.DateTimeField(auto_now_add=True)
-
+class JSONEntry(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='json_entries')
+    json_data = models.JSONField() # Stores JSON data
+    created_at = models.DateTimeField(auto_now_add=True)
+    def __str__(self):
+        return f"Entry for {self.user.username}"

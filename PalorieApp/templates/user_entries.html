@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block content %}
+<h3>List of entries for {{ user.first_name }} {{ user.last_name }}</h3>
+<h3>(Logged in as {{ user.username }} at userid: {{ user.user_id }})</h3>
+{% if entries %}
+    <ul>
+    {% for entry in entries %}
+        <li>
+            <strong>Created at:</strong> {{ entry.created_at }}<br>
+            <strong>Data:</strong> {{ entry.json_data|json_script:"data" }}
+        </li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No entries found for this user.</p>
+{% endif %}
+{% endblock %}
